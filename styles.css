@@ -1,0 +1,87 @@
+.container {
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#refresh-btn {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    height: 62px;
+    min-width: 120px;
+}
+
+.league-block {
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.league-name {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+.match {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.match:last-child {
+    border-bottom: none;
+}
+
+.match-teams {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.match-score {
+    color: #666;
+}
+
+.match-time {
+    font-size: 0.9em;
+    color: #888;
+    margin-top: 5px;
+}
+
+.controls {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+#date-picker {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    height: 40px;
+}
+
+.clickable-score {
+    cursor: pointer;
+    color: #0066cc;
+}
+
+.clickable-score:hover {
+    text-decoration: underline;
+}
+
+.team-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 0px;
+    vertical-align: middle;
+    object-fit: contain;
+}
+
+.team-icon[src="icons/default.png"] {
+    opacity: 0.5;  /* Делаем заглушку полупрозрачной */
+}

@@ -1,0 +1,27 @@
+Version 1.0
+A web page with: 
+- blocks of leagues
+    - in each block a list of matches for the selected league
+
+- a button to refresh the results
+
+A backend that should:
+- fetch data from the API
+- format the data
+- send the data to the frontend
+
+Version 1.1:
+- date selection added
+
+Version 1.2:
+- teams icons
+
+List of future features:
+- add or delete leagues
+- add or delete teams
+- LC
+
+To do list:
+- write tests
+- write test documentation
+

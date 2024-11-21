@@ -1,0 +1,90 @@
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+import requests
+from datetime import datetime, timedelta
+from data import my_api_key
+
+app = Flask(__name__)
+CORS(app)
+
+API_KEY = my_api_key
+URL = "https://v3.football.api-sports.io/fixtures"
+
+@app.route('/api/matches', methods=['GET'])
+def get_matches_api():
+    # Получаем дату из параметров запроса или используем сегодняшнюю дату
+    selected_date = request.args.get('date', datetime.now().strftime('%Y-%m-%d'))
+    matches = get_matches(selected_date, API_KEY)
+    
+    # Преобразуем данные в формат, подходящий для нашего фронтенда
+    formatted_leagues = {}
+    
+    for match in matches:
+        league = match['league']
+        
+        # Фильтруем только АПЛ и Ла Лигу
+        if not ((league['name'].lower() == "premier league" and league['country'].lower() == "england") or
+                (league['name'].lower() == "la liga" and league['country'].lower() == "spain")):
+            continue
+            
+        league_name = f"{league['name']} ({league['country']})"
+        
+        if league_name not in formatted_leagues:
+            formatted_leagues[league_name] = {
+                "leagueName": league_name,
+                "matches": []
+            }
+            
+        match_info = {
+            "homeTeam": match['teams']['home']['name'],
+            "awayTeam": match['teams']['away']['name'],
+            "score": format_score(match),
+            "timeInfo": format_time_info(match['fixture'])
+        }
+        
+        formatted_leagues[league_name]["matches"].append(match_info)
+    
+    return jsonify(list(formatted_leagues.values()))
+
+def get_matches(date, api_key):
+    headers = {
+        "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
+        "x-rapidapi-key": api_key
+    }
+    querystring = {"date": date, "status": "FT"}
+    response = requests.get(URL, headers=headers, params=querystring)
+    data = response.json()
+    return data.get('response', [])
+
+def format_time_info(fixture):
+    match_start = datetime.fromisoformat(fixture['date'].replace('Z', '+00:00'))
+    now = datetime.now()
+
+    if fixture['status']['long'].lower() != "match finished":
+        minutes_played = (now - match_start).seconds // 60
+        return f"Match ongoing for {minutes_played} minutes"
+    else:
+        match_end = match_start + timedelta(minutes=fixture['status'].get('elapsed', 90))
+        if match_end.date() == now.date():
+            minutes_ago = (now - match_end).seconds // 60
+            return f"Match finished {minutes_ago} minutes ago"
+        else:
+            return f"Date: {match_start.strftime('%Y-%m-%d')}"
+
+def format_score(match):
+    status = match['fixture']['status']['long']
+    if status.lower() == "match finished":
+        home_score = match['goals']['home']
+        away_score = match['goals']['away']
+        return {
+            'display': 'Finished',
+            'score': f"{home_score}-{away_score}"
+        }
+    else:
+        return {
+            'display': '?',
+            'score': '?'
+        }
+
+if __name__ == '__main__':
+    app.run(debug=True)
