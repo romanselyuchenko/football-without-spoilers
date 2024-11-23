@@ -4,9 +4,12 @@ class LeagueManager {
         this.refreshButton = document.getElementById('refresh-btn');
         this.datePicker = document.getElementById('date-picker');
         
-        // Set default date to today
-        const today = new Date().toISOString().split('T')[0];
-        this.datePicker.value = today;
+        // Проверяем существование элементов перед установкой значений
+        if (this.datePicker) {
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            this.datePicker.value = today;
+        }
         
         this.teamIcons = {
             'athletic club': 'Athletic Bilbao.png',
@@ -24,11 +27,19 @@ class LeagueManager {
             'real madrid': 'Real Madrid.png'
         };
         
-        this.setupEventListeners();
+        // Устанавливаем обработчики событий только если элементы существуют
+        if (this.refreshButton && this.datePicker) {
+            this.setupEventListeners();
+        }
     }
 
     setupEventListeners() {
-        this.refreshButton.addEventListener('click', () => this.refreshResults());
+        if (this.refreshButton) {
+            this.refreshButton.addEventListener('click', () => this.refreshResults());
+        }
+        if (this.datePicker) {
+            this.datePicker.addEventListener('change', () => this.refreshResults());
+        }
     }
 
     async fetchLeagueData() {
@@ -117,15 +128,28 @@ class LeagueManager {
     }
 
     async refreshResults() {
-        this.leaguesContainer.innerHTML = ''; // Clear existing content
-        const leagues = await this.fetchLeagueData();
-        
-        leagues.forEach(league => {
-            const leagueBlock = this.createLeagueBlock(league);
-            this.leaguesContainer.appendChild(leagueBlock);
-        });
+        try {
+            this.leaguesContainer.innerHTML = 'Loading...'; // Show loading state
+            const leagues = await this.fetchLeagueData();
+            
+            if (leagues.length === 0) {
+                this.leaguesContainer.innerHTML = 'No matches found for selected date';
+                return;
+            }
+
+            this.leaguesContainer.innerHTML = ''; // Clear loading message
+            leagues.forEach(league => {
+                const leagueBlock = this.createLeagueBlock(league);
+                this.leaguesContainer.appendChild(leagueBlock);
+            });
+        } catch (error) {
+            console.error('Error refreshing results:', error);
+            this.leaguesContainer.innerHTML = 'Error loading matches. Please try again.';
+        }
     }
 }
+
+export { LeagueManager };
 
 // Initialize when the page loads
 document.addEventListener('DOMContentLoaded', () => {

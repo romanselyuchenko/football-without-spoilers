@@ -1,14 +1,18 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file, send_from_directory
 from flask_cors import CORS
 import requests
 from datetime import datetime, timedelta
 from data import my_api_key
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='.')
 CORS(app)
 
 API_KEY = my_api_key
 URL = "https://v3.football.api-sports.io/fixtures"
+
+@app.route('/')
+def index():
+    return send_file('index.html')
 
 @app.route('/api/matches', methods=['GET'])
 def get_matches_api():
@@ -85,6 +89,10 @@ def format_score(match):
             'display': '?',
             'score': '?'
         }
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('.', filename)
 
 if __name__ == '__main__':
     app.run(debug=True)
