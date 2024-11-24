@@ -12,7 +12,7 @@ URL = "https://v3.football.api-sports.io/fixtures"
 
 @app.route('/')
 def index():
-    return send_file('index.html')
+    return send_file('frontend/index.html')
 
 @app.route('/api/matches', methods=['GET'])
 def get_matches_api():

@@ -60,17 +60,31 @@ class LeagueManager {
         // Прямой поиск
         const iconFileName = this.teamIcons[normalizedName];
         if (iconFileName) {
-            return `icons/${iconFileName}`;
+            const iconPath = `icons/${iconFileName}`;
+            // Проверяем, существует ли файл
+            if (this.iconExists(iconPath)) {
+                return iconPath;
+            }
         }
         
         // Поиск частичного совпадения
         for (const [key, value] of Object.entries(this.teamIcons)) {
             if (normalizedName.includes(key) || key.includes(normalizedName)) {
-                return `icons/${value}`;
+                const iconPath = `icons/${value}`;
+                if (this.iconExists(iconPath)) {
+                    return iconPath;
+                }
             }
         }
         
-        return ''; // Возвращаем пустую строку вместо пути к default.png
+        return 'icons/default.png'; // Возвращаем путь к default.png, если иконка не найдена
+    }
+
+    // Метод для проверки существования файла (псевдокод, нужно реализовать)
+    iconExists(path) {
+        // Реализуйте логику проверки существования файла
+        // Например, можно использовать AJAX-запрос для проверки
+        return true; // Замените на реальную проверку
     }
 
     createLeagueBlock(leagueData) {

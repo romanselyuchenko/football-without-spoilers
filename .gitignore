@@ -12,6 +12,7 @@
 !styles.css
 !test*
 !requirements.txt
+!data.py
 
 # Even if they are in subdirectories
 !*/
@@ -19,3 +20,7 @@
 # But still ignore some paths...
 stuf/
 .git/
+__pycache__/
+*.pyc
+*.log
+.env
