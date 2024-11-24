@@ -28,8 +28,7 @@
 .match {
     display: flex;
     flex-direction: column;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
 }
 
 .match:last-child {
@@ -37,11 +36,14 @@
 }
 
 .match-teams {
-    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 5px;
 }
 
 .match-score {
+    text-align: center;
     color: #666;
 }
 
@@ -75,13 +77,26 @@
 }
 
 .team-icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 0px;
-    vertical-align: middle;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
     object-fit: contain;
 }
 
 .team-icon[src="icons/default.png"] {
     opacity: 0.5;  /* Делаем заглушку полупрозрачной */
+}
+
+body {
+    transform: scale(1.25);
+    transform-origin: top left; /* Устанавливаем точку отсчета для масштабирования */
+    width: 100%; /* Устанавливаем ширину на 100% */
+    overflow-x: hidden; /* Скрываем горизонтальную прокрутку */
+    overflow-y: auto; /* Позволяем вертикальную прокрутку */
+}
+
+.team-block {
+    display: flex;
+    align-items: center;
+    flex: 1;
 }

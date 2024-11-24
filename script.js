@@ -97,7 +97,7 @@ class LeagueManager {
 
             matchDiv.innerHTML = `
                 <div class="match-teams">
-                    ${homeTeamIcon} ${match.homeTeam} vs ${awayTeamIcon} ${match.awayTeam}
+                    ${homeTeamIcon} ${match.homeTeam}  ${awayTeamIcon} ${match.awayTeam}
                 </div>
                 <div class="match-score" data-full-score="${match.score.score}">
                     ${match.score.display === 'Finished' ? 
