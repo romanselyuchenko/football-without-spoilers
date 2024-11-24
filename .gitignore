@@ -11,6 +11,7 @@
 !script.js
 !styles.css
 !test*
+!requirements.txt
 
 # Even if they are in subdirectories
 !*/
