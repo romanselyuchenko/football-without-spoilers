@@ -45,7 +45,7 @@ class LeagueManager {
     async fetchLeagueData() {
         try {
             const selectedDate = this.datePicker.value;
-            const response = await fetch(`https://football-without-spoilers.onrender.com/api/matches?date=${selectedDate}`);
+            const response = await fetch(`http://127.0.0.1:5000/api/matches?date=${selectedDate}`);
             const data = await response.json();
             return data;
         } catch (error) {
