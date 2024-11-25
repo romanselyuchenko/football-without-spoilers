@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, send_file, send_from_directory
 from flask_cors import CORS
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from data import my_api_key
 
 app = Flask(__name__, static_url_path='', static_folder='.')
@@ -62,7 +62,7 @@ def get_matches(date, api_key):
 
 def format_time_info(fixture):
     match_start = datetime.fromisoformat(fixture['date'].replace('Z', '+00:00'))
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
 
     if fixture['status']['long'].lower() != "match finished":
         minutes_played = (now - match_start).seconds // 60

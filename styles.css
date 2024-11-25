@@ -100,3 +100,9 @@ body {
     align-items: center;
     flex: 1;
 }
+
+.youtube-link {
+    display: none; /* Скрываем по умолчанию */
+    text-align: center; /* Выравнивание по центру */
+    margin-top: 10px; /* Добавляем отступ сверху для лучшего визуального восприятия */
+}

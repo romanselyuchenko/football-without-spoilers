@@ -44,8 +44,12 @@ class LeagueManager {
 
     async fetchLeagueData() {
         try {
-            const selectedDate = this.datePicker.value;
-            const response = await fetch(`http://127.0.0.1:5000/api/matches?date=${selectedDate}`);
+            const selectedDate = this.datePicker.value; // ссылку нужно после каждого запуска ngrok менять
+            const response = await fetch(`https://e247-46-150-68-124.ngrok-free.app/api/matches?date=${selectedDate}`, {
+                headers: {
+                    'ngrok-skip-browser-warning': 'true'
+                }
+            });
             const data = await response.json();
             return data;
         } catch (error) {
@@ -118,18 +122,28 @@ class LeagueManager {
                         '<span class="clickable-score">Finished</span>' : 
                         match.score.display}
                 </div>
+                <div class="youtube-link" style="display: none;">
+                    <a href="#" class="youtube-button">YouTube</a>
+                </div>
             `;
 
             // Добавляем обработчик клика для счета
             const scoreElement = matchDiv.querySelector('.clickable-score');
+            const youtubeLinkDiv = matchDiv.querySelector('.youtube-link');
+
             if (scoreElement) {
                 let showingScore = false;
                 scoreElement.addEventListener('click', function() {
                     const fullScore = this.closest('.match-score').dataset.fullScore;
                     if (showingScore) {
                         this.textContent = 'Finished';
+                        youtubeLinkDiv.style.display = 'none'; // Скрываем ссылку при показе счета
                     } else {
                         this.textContent = fullScore;
+                        const homeTeam = match.homeTeam.split(' ').join('+'); // Заменяем пробелы на '+'
+                        const awayTeam = match.awayTeam.split(' ').join('+'); // Заменяем пробелы на '+'
+                        youtubeLinkDiv.querySelector('.youtube-button').href = `https://www.youtube.com/results?search_query=megogo+${homeTeam}+${awayTeam}`;
+                        youtubeLinkDiv.style.display = 'block'; // Показываем ссылку при показе счета
                     }
                     showingScore = !showingScore;
                 });
