@@ -25,3 +25,10 @@ To do list:
 - write tests
 - write test documentation
 
+2.0
+remove 'megogo'
+leage icons
+teams icons
+maybe it is possible to host frontend on github pages to secure a constant link (postponed)
+get rid of a stub page
+add league of the champions

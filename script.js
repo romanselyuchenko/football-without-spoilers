@@ -45,7 +45,7 @@ class LeagueManager {
     async fetchLeagueData() {
         try {
             const selectedDate = this.datePicker.value; // ссылку нужно после каждого запуска ngrok менять
-            const response = await fetch(`https://e247-46-150-68-124.ngrok-free.app/api/matches?date=${selectedDate}`, {
+            const response = await fetch(`http://127.0.0.1:5000/api/matches?date=${selectedDate}`, {
                 headers: {
                     'ngrok-skip-browser-warning': 'true'
                 }
