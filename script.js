@@ -97,8 +97,20 @@ class LeagueManager {
 
         const leagueName = document.createElement('h2');
         leagueName.className = 'league-name';
-        leagueName.textContent = leagueData.leagueName;
+        leagueName.textContent = leagueData.leagueName.split(' (')[0]; // Убираем часть с названием страны
+
+        // Добавляем логотип лиги
+        const leagueLogoPath = this.getLeagueLogo(leagueData.leagueName);
+        if (leagueLogoPath) {
+            const leagueLogo = document.createElement('img');
+            leagueLogo.src = leagueLogoPath;
+            leagueLogo.alt = `${leagueData.leagueName} logo`;
+            leagueLogo.className = 'league-logo'; // Добавьте CSS для стилизации
+            leagueName.prepend(leagueLogo); // Добавляем логотип перед названием лиги
+        }
+
         leagueBlock.appendChild(leagueName);
+        
 
         leagueData.matches.forEach(match => {
             const matchDiv = document.createElement('div');
@@ -132,20 +144,40 @@ class LeagueManager {
             const youtubeLinkDiv = matchDiv.querySelector('.youtube-link');
 
             if (scoreElement) {
-                let showingScore = false;
+                let state = 0; // 0: статус, 1: победитель, 2: счет + ссылка
+                scoreElement.innerHTML = match.score.display; // Устанавливаем статус матча по умолчанию
+
                 scoreElement.addEventListener('click', function() {
                     const fullScore = this.closest('.match-score').dataset.fullScore;
-                    if (showingScore) {
-                        this.textContent = 'Finished';
-                        youtubeLinkDiv.style.display = 'none'; // Скрываем ссылку при показе счета
-                    } else {
-                        this.textContent = fullScore;
+                    const homeScore = match.score.score.split('-')[0];
+                    const awayScore = match.score.score.split('-')[1];
+                    let displayText = '';
+
+                    if (state === 0) {
+                        displayText = ''; // Статус матча уже установлен
+                    } else if (state === 1) {
+                        if (homeScore > awayScore) {
+                            displayText = `Победитель: ${match.homeTeam}`;
+                        } else if (homeScore < awayScore) {
+                            displayText = `Победитель: ${match.awayTeam}`;
+                        } else {
+                            displayText = 'Ничья';
+                        }
+                    } else if (state === 2) {
+                        displayText = `${fullScore} - <a href="#" class="youtube-button">YouTube</a>`;
                         const homeTeam = match.homeTeam.split(' ').join('+'); // Заменяем пробелы на '+'
                         const awayTeam = match.awayTeam.split(' ').join('+'); // Заменяем пробелы на '+'
                         youtubeLinkDiv.querySelector('.youtube-button').href = `https://www.youtube.com/results?search_query=megogo+${homeTeam}+${awayTeam}`;
                         youtubeLinkDiv.style.display = 'block'; // Показываем ссылку при показе счета
                     }
-                    showingScore = !showingScore;
+
+                    // Обновляем текст только если есть новое значение
+                    if (displayText) {
+                        this.innerHTML = displayText; 
+                    }
+
+                    // Переход к следующему состоянию
+                    state = (state + 1) % 3; 
                 });
             }
 
@@ -153,6 +185,19 @@ class LeagueManager {
         });
 
         return leagueBlock;
+    }
+
+    // Новый метод для получения логотипа лиги
+    getLeagueLogo(leagueName) {
+        const leagueLogos = {
+            'Premier League': 'English Premier League.png',
+            'La Liga': 'LaLiga.png',
+            'UEFA Champions League': 'UEFA Champions League.png'
+        };
+
+        const normalizedLeagueName = leagueName.split(' (')[0]; // Убираем часть с названием страны
+        const logoFileName = leagueLogos[normalizedLeagueName];
+        return logoFileName ? `icons/${logoFileName}` : null; // Возвращаем путь к логотипу или null
     }
 
     async refreshResults() {
